@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}About My Diana{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3em; color: #8B1538; margin: 20px 0; font-weight: bold;">
+            💖 About My Diana 💖
+        </h1>
+        <p style="color: #C41E3A; font-size: 1.2em; margin: 10px 0;">
+            Everything I know and love about Diana Mae Retulla
+        </p>
+    </div>
+
+    <!-- Basic Info Card -->
+    <div style="background: linear-gradient(135deg, #C41E3A 0%, #8B1538 100%); border-radius: 15px; padding: 30px; margin-bottom: 30px; color: white; box-shadow: 0 8px 16px rgba(139, 21, 56, 0.3);">
+        <div style="text-align: center;">
+            <h2 style="font-size: 2.5em; margin: 0 0 10px 0;">👑 Diana Mae Retulla</h2>
+            <p style="font-size: 1.1em; margin: 5px 0;">Birthday: March 27, 2006</p>
+            <p style="font-size: 1.1em; margin: 5px 0;">Nicknames: <strong>Meme, Yani, Yana</strong></p>
+        </div>
+    </div>
+
+    <!-- Interests Section -->
+    <div style="background: #F5E6E6; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #C41E3A;">
+        <h3 style="color: #8B1538; font-size: 1.8em; margin-top: 0;">✨ Her Interests</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div>
+                <p style="color: #8B1538; font-weight: bold;">🎨 Fav Color</p>
+                <p style="color: #333; margin: 0;">Matcha Green</p>
+            </div>
+            <div>
+                <p style="color: #8B1538; font-weight: bold;">🐱 Fav Pet</p>
+                <p style="color: #333; margin: 0;">Cat & Dog (but mostly cat)</p>
+            </div>
+            <div>
+                <p style="color: #8B1538; font-weight: bold;">🌸 Fav Perfume</p>
+                <p style="color: #333; margin: 0;">Aficionado</p>
+            </div>
+            <div>
+                <p style="color: #8B1538; font-weight: bold;">🎮 Fav Hobbies</p>
+                <p style="color: #333; margin: 0;">Photography, Drawing, Playing games</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorite Foods Section -->
+    <div style="background: #F5E6E6; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #D4758E;">
+        <h3 style="color: #8B1538; font-size: 1.8em; margin-top: 0;">🍽️ Her Favorite Foods & Drinks</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            {% for food in diana.fav_foods %}
+            <span style="background: white; color: #8B1538; padding: 8px 15px; border-radius: 20px; border: 2px solid #C41E3A; font-weight: 500;">
+                {{ food }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Dislikes Foods Section -->
+    <div style="background: #FFE8E8; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #E8B4BE;">
+        <h3 style="color: #8B1538; font-size: 1.8em; margin-top: 0;">❌ Foods/Drinks She Doesn't Like</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            {% for food in diana.dislikes_food %}
+            <span style="background: #FFF0F0; color: #8B1538; padding: 8px 15px; border-radius: 20px; border: 2px solid #E8B4BE;">
+                {{ food }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Things She Likes -->
+    <div style="background: #F5E6E6; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #C41E3A;">
+        <h3 style="color: #8B1538; font-size: 1.8em; margin-top: 0;">💝 Things She Likes</h3>
+        <ul style="color: #333; line-height: 2;">
+            {% for item in diana.likes %}
+            <li style="margin: 10px 0;">{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Things She Dislikes -->
+    <div style="background: #FFE8E8; border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #E8B4BE;">
+        <h3 style="color: #8B1538; font-size: 1.8em; margin-top: 0;">😠 Things She Dislikes</h3>
+        <ul style="color: #333; line-height: 2;">
+            {% for item in diana.dislikes %}
+            <li style="margin: 10px 0;">{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Things I Love About Her -->
+    <div style="background: linear-gradient(135deg, #F5E6E6 0%, #FFE8E8 100%); border-radius: 12px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #C41E3A;">
+        <h3 style="color: #8B1538; font-size: 2em; margin-top: 0; text-align: center;">
+            ❤️ Things I Love About Her ❤️
+        </h3>
+        <div style="background: white; border-radius: 10px; padding: 20px; margin-top: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                {% for item in diana.loves_about_her %}
+                <div style="padding: 15px; background: linear-gradient(135deg, #F5E6E6 0%, white 100%); border-radius: 8px; border-left: 3px solid #C41E3A;">
+                    <p style="color: #333; margin: 0; font-size: 1em; line-height: 1.6;">
+                        {{ item }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Heart Message -->
+    <div style="text-align: center; padding: 30px; margin-top: 40px; border-top: 3px solid #C41E3A;">
+        <p style="color: #8B1538; font-size: 1.5em; margin: 10px 0; font-weight: bold;">
+            💕 You mean the world to me 💕
+        </p>
+        <p style="color: #666; font-size: 1.1em; margin: 10px 0; font-style: italic;">
+            Forever grateful for having you in my life
+        </p>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #FFF5F5 0%, #F5E6E6 100%);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+
+{% block title %}✍️ Add Memory - Happy Valentine's Day{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-container h1 {
+        background: linear-gradient(135deg, #C41E3A, #8B1538);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+    }
+
+    .form-intro {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1.05em;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+        font-weight: 600;
+        font-size: 1em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #E8B4BE;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #C41E3A;
+        box-shadow: 0 0 10px rgba(196, 30, 58, 0.2);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+    }
+
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 30px;
+        border: 2px dashed #C41E3A;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #F5E6E6;
+    }
+
+    .file-input-label:hover {
+        background: #EACDD0;
+        border-color: #8B1538;
+    }
+
+    .file-input-label i {
+        font-size: 1.5em;
+    }
+
+    #image {
+        display: none;
+    }
+
+    .file-name {
+        color: #8B1538;
+        font-weight: 600;
+        display: none;
+        margin-top: 10px;
+    }
+
+    .file-name.show {
+        display: block;
+    }
+
+    .form-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1em;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #C41E3A, #8B1538);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 21, 56, 0.3);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #8B1538;
+        border: 2px solid #8B1538;
+    }
+
+    .btn-secondary:hover {
+        background: #F5E6E6;
+    }
+
+    .memory-list {
+        margin-top: 60px;
+    }
+
+    .memory-list h2 {
+        color: #333;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #E8B4BE;
+    }
+
+    .memory-item {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        border-left: 4px solid #C41E3A;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .memory-item.selected {
+        background: #F5E6E6;
+        border-left-color: #8B1538;
+    }
+
+    .memory-item-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #C41E3A;
+        flex-shrink: 0;
+    }
+
+    .memory-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #E8B4BE;
+    }
+
+    .delete-all-section {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .bulk-delete-btn {
+        background: #C41E3A;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: none;
+    }
+
+    .bulk-delete-btn:hover {
+        background: #8B1538;
+        transform: scale(1.05);
+    }
+
+    .bulk-delete-btn.show {
+        display: inline-block;
+    }
+
+    .selected-count {
+        color: #666;
+        font-weight: 500;
+        font-size: 0.95em;
+    }
+
+    .memory-item-content {
+        flex: 1;
+    }
+
+    .memory-item-title {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .memory-item-date {
+        font-size: 0.85em;
+        color: #999;
+    }
+
+    .memory-item-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .delete-btn {
+        background: #C41E3A;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .delete-btn:hover {
+        background: #8B1538;
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>✍️ Create New Memory</h1>
+    <p class="form-intro">Add a new love letter, note, or photo to your drawer</p>
+
+    <form id="addMemoryForm" method="POST" enctype="multipart/form-data" onsubmit="return validateAndSubmitForm(event)">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" placeholder="e.g., Our First Kiss, Favorite Memory, Love Note">
+        </div>
+
+        <div class="form-group">
+            <label for="message">Message or Letter *</label>
+            <textarea id="message" name="message" placeholder="Write your love message, poem, or note here..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Upload Photo (optional)</label>
+            <div class="file-input-wrapper">
+                <label for="image" class="file-input-label">
+                    <span>📸</span>
+                    <span>Click to upload or drag a photo here</span>
+                </label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <div id="fileName" class="file-name"></div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">💌 Save Memory</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary" style="text-align: center; text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% if drawer_items %}
+<div class="memory-list">
+    <div class="memory-list-header">
+        <h2>📋 Your Memories ({{ drawer_items.count }})</h2>
+    </div>
+
+    <!-- Bulk Delete Form -->
+    <form id="bulkDeleteForm" method="POST" action="{% url 'bulk_delete' %}">
+        {% csrf_token %}
+
+        <!-- Select All Section -->
+        <div class="delete-all-section">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="selectAllCheckbox" class="memory-item-checkbox">
+                <span>Select All</span>
+            </label>
+            <span id="selectedCountSpan" class="selected-count">0 selected</span>
+            <button type="submit" id="bulkDeleteBtn" class="bulk-delete-btn" onclick="return confirm('Delete selected memories? This cannot be undone');">🗑️ Delete Selected</button>
+        </div>
+
+        <!-- Memory Items -->
+        {% for item in drawer_items %}
+            <div class="memory-item" data-item-id="{{ item.id }}">
+                <input type="checkbox" name="selected_items" value="{{ item.id }}" class="memory-item-checkbox item-checkbox">
+                <div class="memory-item-content" style="flex: 1;">
+                    <div class="memory-item-title">{{ item.title }}</div>
+                    <div class="memory-item-date">Created: {{ item.created_at|date:"M d, Y \a\t g:i A" }}</div>
+                </div>
+                <div class="memory-item-actions">
+                    <button type="button" class="delete-btn" onclick="deleteSingleMemory('{{ item.id }}')">🗑️ Delete</button>
+                </div>
+            </div>
+        {% endfor %}
+    </form>
+{% endif %}
+
+<script>
+    // Form validation with dialog
+    function validateAndSubmitForm(event) {
+        const titleInput = document.getElementById('title');
+        const messageInput = document.getElementById('message');
+        const title = titleInput.value.trim();
+        const message = messageInput.value.trim();
+        
+        let missingFields = [];
+        
+        if (!title) {
+            missingFields.push('Title');
+        }
+        if (!message) {
+            missingFields.push('Message');
+        }
+        
+        if (missingFields.length > 0) {
+            const missingList = missingFields.join(' and ');
+            const proceed = confirm(
+                `⚠️ Missing Fields: ${missingList}\n\nDo you want to proceed anyway and upload it, or fill in the missing fields?\n\nClick "OK" to upload anyway, or "Cancel" to go back and fill them in.`
+            );
+            
+            if (!proceed) {
+                // Focus on first missing field
+                if (!title) {
+                    titleInput.focus();
+                } else if (!message) {
+                    messageInput.focus();
+                }
+                return false; // Prevent form submission
+            }
+        }
+        
+        return true; // Allow form submission
+    }
+
+    const fileInput = document.getElementById('image');
+    const fileLabel = document.querySelector('.file-input-label');
+    const fileName = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            fileName.textContent = '✓ ' + this.files[0].name;
+            fileName.classList.add('show');
+        }
+    });
+
+    // Drag and drop
+    fileLabel.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileLabel.style.background = '#EACDD0';
+    });
+
+    fileLabel.addEventListener('dragleave', () => {
+        fileLabel.style.background = '#F5E6E6';
+    });
+
+    fileLabel.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileInput.files = e.dataTransfer.files;
+        // Trigger change event
+        fileInput.dispatchEvent(new Event('change'));
+    });
+
+    // Bulk delete functionality
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const selectedCountSpan = document.getElementById('selectedCountSpan');
+    const memoryItems = document.querySelectorAll('.memory-item');
+
+    // Select all checkbox
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+                updateMemoryItemUI(checkbox);
+            });
+            updateBulkDeleteUI();
+        });
+    }
+
+    // Individual checkboxes
+    itemCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateMemoryItemUI(this);
+            updateBulkDeleteUI();
+            updateSelectAllCheckbox();
+        });
+    });
+
+    // Update memory item visual state
+    function updateMemoryItemUI(checkbox) {
+        const memoryItem = checkbox.closest('.memory-item');
+        if (checkbox.checked) {
+            memoryItem.classList.add('selected');
+        } else {
+            memoryItem.classList.remove('selected');
+        }
+    }
+
+    // Update bulk delete button visibility and counter
+    function updateBulkDeleteUI() {
+        const selected = document.querySelectorAll('.item-checkbox:checked').length;
+        selectedCountSpan.textContent = selected + ' ' + (selected === 1 ? 'memory' : 'memories') + ' selected';
+        if (selected > 0) {
+            bulkDeleteBtn.classList.add('show');
+        } else {
+            bulkDeleteBtn.classList.remove('show');
+        }
+    }
+
+    // Update select all checkbox state
+    function updateSelectAllCheckbox() {
+        const allChecked = Array.from(itemCheckboxes).every(cb => cb.checked);
+        const someChecked = Array.from(itemCheckboxes).some(cb => cb.checked);
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+        }
+    }
+
+    // Delete single memory
+    function deleteSingleMemory(itemId) {
+        if (confirm('Are you sure you want to delete this memory?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/delete/' + String(itemId) + '/';
+            
+            // Get CSRF token from the page
+            const csrfTokenElement = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (csrfTokenElement) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfTokenElement.value;
+                form.appendChild(csrfInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}

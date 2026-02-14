@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Diana's Favorite Music{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 3em; color: #8B1538; margin: 20px 0; font-weight: bold;">
+            🎵 {{ playlist.title }} 🎵
+        </h1>
+        <p style="color: #C41E3A; font-size: 1.2em; margin: 10px 0;">
+            {{ playlist.description }}
+        </p>
+    </div>
+
+    <!-- Music Player Section -->
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 40px;">
+        <!-- Player Card (Left) -->
+        <div style="background: linear-gradient(135deg, #C41E3A 0%, #8B1538 100%); border-radius: 15px; padding: 25px; box-shadow: 0 8px 16px rgba(139, 21, 56, 0.3); height: fit-content; position: sticky; top: 100px;">
+            <div style="text-align: center; color: white;">
+                <div style="background: black; border-radius: 10px; overflow: hidden; margin-bottom: 20px;">
+                    <iframe id="currentPlayer"
+                        width="100%"
+                        height="250"
+                        src="https://www.youtube-nocookie.com/embed/gu-kPQ51ZX8?controls=1&modestbranding=1"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                        style="display: block;">
+                    </iframe>
+                </div>
+                <h2 id="currentSongTitle" style="margin: 0; font-size: 1.3em; word-break: break-word;">Forevermore</h2>
+                <p id="currentSongArtist" style="margin: 5px 0; opacity: 0.9; font-size: 0.95em;">John Roberts</p>
+                
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                    <p style="margin: 5px 0; opacity: 0.8; font-size: 0.9em;">💡 Click any song below to play it here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Playlist (Right) -->
+        <div style="background: #F5E6E6; border-radius: 12px; padding: 25px; border-left: 5px solid #C41E3A;">
+            <h3 style="color: #8B1538; font-size: 1.6em; margin-top: 0;">📻 Playlist ({{ playlist.songs|length }} songs)</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px; max-height: 600px; overflow-y: auto;">
+                {% for song in playlist.songs %}
+                <div class="playlist-item" onclick="playSong('{{ song.youtube_id }}', '{{ song.title }}', '{{ song.artist }}')"
+                     style="background: white; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-left: 4px solid #C41E3A; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                        <h4 style="color: #8B1538; margin: 5px 0; font-size: 1em;">{{ song.title }}</h4>
+                        <p style="color: #666; margin: 3px 0; font-size: 0.9em;">{{ song.artist }}</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-left: 15px;">
+                        <span style="color: #C41E3A; font-weight: bold; font-size: 0.85em; white-space: nowrap;">⏱️ {{ song.duration }}</span>
+                        <button type="button" onclick="event.stopPropagation();" style="background: linear-gradient(135deg, #C41E3A 0%, #8B1538 100%); color: white; border: none; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; white-space: nowrap;">
+                            ▶️ Play
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Love Message -->
+    <div style="text-align: center; padding: 30px; margin-top: 40px; border-top: 3px solid #C41E3A; background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%); border-radius: 12px;">
+        <p style="color: #8B1538; font-size: 1.5em; margin: 10px 0; font-weight: bold;">
+            🎶 Every song reminds me of you 🎶
+        </p>
+        <p style="color: #666; font-size: 1.1em; margin: 10px 0; font-style: italic;">
+            Your taste in music is as beautiful as you are
+        </p>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #FFF5F5 0%, #F5E6E6 100%);
+    }
+
+    .playlist-item:hover {
+        background: linear-gradient(135deg, #FFF5F5 0%, #FFE8E8 100%);
+        border-left-color: #8B1538;
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.15);
+    }
+
+    .playlist-item:hover button {
+        transform: scale(1.05);
+    }
+
+    /* Scrollbar styling */
+    div[style*="max-height: 600px"]::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    div[style*="max-height: 600px"]::-webkit-scrollbar-track {
+        background: #F5E6E6;
+    }
+
+    div[style*="max-height: 600px"]::-webkit-scrollbar-thumb {
+        background: #C41E3A;
+        border-radius: 4px;
+    }
+
+    div[style*="max-height: 600px"]::-webkit-scrollbar-thumb:hover {
+        background: #8B1538;
+    }
+
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns: 1fr 2fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+<script>
+    function playSong(youtubeId, title, artist) {
+        // Update the embedded player on the page
+        const player = document.getElementById('currentPlayer');
+        player.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?controls=1&modestbranding=1&autoplay=1`;
+        
+        // Update display
+        document.getElementById('currentSongTitle').textContent = title;
+        document.getElementById('currentSongArtist').textContent = artist;
+        
+        // Scroll to player if on mobile
+        if (window.innerWidth < 768) {
+            document.querySelector('.playlist-item').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+</script>
+
+{% endblock %}
+
+

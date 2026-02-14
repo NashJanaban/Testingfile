@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Valentine's Day Drawer 💝{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: linear-gradient(135deg, #8B1538 0%, #C41E3A 100%);
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(139, 21, 56, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        /* Drawer Icon Button */
+        .drawer-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drawer-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .drawer-toggle.active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Drawer Menu */
+        .drawer-menu {
+            position: fixed;
+            right: -300px;
+            top: 70px;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: linear-gradient(135deg, #8B1538 0%, #C41E3A 100%);
+            box-shadow: -4px 0 15px rgba(139, 21, 56, 0.3);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 99;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .drawer-menu.open {
+            right: 0;
+        }
+
+        .drawer-menu-item {
+            display: block;
+            padding: 20px 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+        }
+
+        .drawer-menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+            padding-left: 30px;
+        }
+
+        .drawer-menu-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: white;
+        }
+
+        /* Overlay for drawer */
+        .drawer-overlay {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: rgba(0, 0, 0, 0);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 98;
+            pointer-events: none;
+        }
+
+        .drawer-overlay.open {
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            background: linear-gradient(135deg, #C41E3A, #8B1538);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #999;
+            font-size: 1.05em;
+        }
+
+        @media (max-width: 768px) {
+            .drawer-menu {
+                width: 250px;
+                right: -250px;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">💌 My Valentine's</div>
+        <button class="drawer-toggle" id="drawerToggle" title="Open drawer menu">☰</button>
+    </nav>
+
+    <!-- Drawer Menu Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Drawer Menu -->
+    <div class="drawer-menu" id="drawerMenu">
+        <a href="{% url 'home' %}" class="drawer-menu-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            📖 View Drawer
+        </a>
+        <a href="{% url 'add_memory' %}" class="drawer-menu-item {% if request.resolver_match.url_name == 'add_memory' %}active{% endif %}">
+            ✍️ Add Memory
+        </a>
+        <a href="{% url 'diana_notes' %}" class="drawer-menu-item {% if request.resolver_match.url_name == 'diana_notes' %}active{% endif %}">
+            💖 About My Diana
+        </a>
+        <a href="{% url 'diana_music' %}" class="drawer-menu-item {% if request.resolver_match.url_name == 'diana_music' %}active{% endif %}">
+            🎵 Diana's Music
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Drawer toggle functionality
+        const drawerToggle = document.getElementById('drawerToggle');
+        const drawerMenu = document.getElementById('drawerMenu');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        // Toggle drawer on button click
+        drawerToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            drawerMenu.classList.toggle('open');
+            drawerOverlay.classList.toggle('open');
+            drawerToggle.classList.toggle('active');
+        });
+
+        // Close drawer when clicking on overlay
+        drawerOverlay.addEventListener('click', function() {
+            drawerMenu.classList.remove('open');
+            drawerOverlay.classList.remove('open');
+            drawerToggle.classList.remove('active');
+        });
+
+        // Close drawer when clicking on a menu item
+        const drawerMenuItems = document.querySelectorAll('.drawer-menu-item');
+        drawerMenuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                drawerMenu.classList.remove('open');
+                drawerOverlay.classList.remove('open');
+                drawerToggle.classList.remove('active');
+            });
+        });
+
+        // Close drawer on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && drawerMenu.classList.contains('open')) {
+                drawerMenu.classList.remove('open');
+                drawerOverlay.classList.remove('open');
+                drawerToggle.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
